@@ -102,7 +102,7 @@ oplwallet=$HOME/.oplcore
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
-print_status Installing the opl Masternode...
+print_status 'Installing the opl Masternode...'
 # =======================================================================================
 # What you need.
 whiptail --msgbox "You will need:
@@ -132,7 +132,7 @@ masternodealias=$(whiptail --inputbox "Create a new receiving address. Open menu
 # Step 3
 whiptail --msgbox "Send exactly 3001 coins to this mn1 address When you send the coins make sure you send the correct address you created above, Verify that \"Subtract fee from amount\" is NOT checked. Wait for 15 confirmations of this transaction.
 
-Note:  To check the confirmations of the transaction go to Transactions → right Click \"Show Transaction Details\" or Hover over the time clock in the far right of the transaction." \
+Note:  To check the confirmations of the transaction go to Transactions →right Click \"Show Transaction Details\" or Hover over the time clock in the far right of the transaction." \
 	--backtitle "Installing OPL Masternode" \
 	--title "Step 3" \
 	24 78
@@ -184,12 +184,6 @@ whiptail --msgbox "Restart the wallet and go to the “Masternodes” tab. There
 	--backtitle "Installing OPL Masternode" \
 	--title "Step 8" \
 	24 78
-	
-# Step 9
-whiptail --msgbox "It is useful to lock the account holding the MN coins so that it would not be accidentally spent. To do this, if you have not done this yet go to the menu Settings→Options, choose tab Wallet, check the box “Enable coin control features”, then restart the wallet. Go to the Send tab, click “Inputs”, select “List mode”, select the line with your MN and 1000 coins in it, right click on it and select “Lock unspent”. The line should be grayed out now with a lock icon on it. To unlock chose “Unlock unspent”." \
-	--backtitle "Installing OPL Masternode" \
-	--title "Step 9" \
-	24 78
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
@@ -197,7 +191,7 @@ whiptail --msgbox "It is useful to lock the account holding the MN coins so that
 # =======================================================================================
 oplOS=linux
 oplURL=$(curl -s https://api.github.com/repos/opl-coin/opl.coin/releases/latest | jq -r ".assets[] | select(.name | test(\"${oplOS}\")) | .browser_download_url")
-oplFilename=$(curl -s https://api.github.com/repos/opl-coin/opl.coin/releases/latest | jq -r ".assets[] | select(.name | test(\"${os}\")) | .name")
+oplFilename=$(basename $oplURL)
 wget $oplURL
 unzip -j $oplFilename -d /usr/local/bin/
 chmod +x /usr/local/bin/opl*
@@ -205,9 +199,22 @@ rm -rf $oplFilename
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
-# Create opl.conf
+# Create wallet directory in users home folder
 # =======================================================================================
-read -d '' oplconf <<"EOF"
+mkdir $oplwallet
+# ---------------------------------------------------------------------------------------
+
+# =======================================================================================
+# Create masternode.conf
+# =======================================================================================
+read -d '' masternodeconf <<"EOF"
+EOF
+# ---------------------------------------------------------------------------------------
+
+# =======================================================================================
+print_status 'Creating the opl configuration...'
+# =======================================================================================
+cat <<EOF > $oplwallet/opl.conf
 listen=1
 server=1
 daemon=1
@@ -223,42 +230,21 @@ EOF
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
-# Create wallet directory in users home folder
+print_status 'Creating the opl Masternode configuration...'
 # =======================================================================================
-mkdir $oplwallet
+echo $masternodealias $publicip:$rpcport $masternodeprivkey $collateral_output_txid $collateral_output_index
+ > $oplwallet/masternode.conf
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
-# Create masternode.conf
-# =======================================================================================
-read -d '' masternodeconf <<"EOF"
-$masternodealias $publicip:$rpcport $masternodeprivkey $collateral_output_txid $collateral_output_index
-EOF
-# ---------------------------------------------------------------------------------------
-
-# =======================================================================================
-print_status Creating the opl configuration...
-# =======================================================================================
-cat <<EOF > $oplwallet/opl.conf
-$oplconf
-EOF
-# ---------------------------------------------------------------------------------------
-
-# =======================================================================================
-print_status Creating the opl Masternode configuration...
-# =======================================================================================
-echo "$masternodeconf" >> $oplwallet/masternode.conf
-# ---------------------------------------------------------------------------------------
-
-# =======================================================================================
-print_status Fix wallet permissions...
+print_status 'Fix wallet permissions...'
 # =======================================================================================
 chown -R $opluser $oplwallet
 chmod 0600 $oplwallet/*
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
-print_status Installing opl service...
+print_status 'Installing opl service...'
 # =======================================================================================
 cat <<EOF > /etc/systemd/system/opld.service
 [Unit]
@@ -277,7 +263,7 @@ EOF
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
-print_status Enabling and starting opl service...
+print_status 'Enabling and starting opl service...'
 # =======================================================================================
 systemctl daemon-reload
 systemctl enable opld
