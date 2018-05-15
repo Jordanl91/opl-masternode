@@ -46,7 +46,7 @@ fi
 print_status 'Switch to Aptitude...'
 # =======================================================================================
 apt update
-apt install aptitude
+apt -y install aptitude
 alias aptitude='aptitude -yq3'
 # ---------------------------------------------------------------------------------------
 
