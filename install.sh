@@ -56,9 +56,9 @@ print_status 'Installing packages required for setup...'
 aptitude update
 aptitude dist-upgrade
 aptitude install \
-    apt-transport-https \
-    ca-certificates \
-    curl \
+	apt-transport-https \
+	ca-certificates \
+	curl \
 	htop \
 	fail2ban \
 	jq \
@@ -71,9 +71,9 @@ aptitude install \
 	libzmq3-dev \
 	libminiupnpc-dev \
 	libevent-dev \
-    lsb-release \
+	lsb-release \
 	software-properties-common \
-    unattended-upgrades \
+	unattended-upgrades \
 	unzip \
 	ufw \
 	wget
