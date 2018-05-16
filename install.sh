@@ -282,7 +282,8 @@ PrivateDevices=true
 MemoryDenyWriteExecute=true
 
 [Install]
-WantedBy=multi-user.targetEOF
+WantedBy=multi-user.target
+EOF
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
