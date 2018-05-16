@@ -4,7 +4,6 @@
 # Setup alias and helper functions
 # =======================================================================================
 export NEWT_COLORS=''
-alias whiptail='TERM=ansi whiptail'
 
 # Silence
 # Use 'command args...'
@@ -45,17 +44,16 @@ fi
 # =======================================================================================
 # 'Switch to Aptitude...'
 # =======================================================================================
-apt update
-apt-get -y install aptitude
-alias app='aptitude -yq3'
+stfu apt update
+stfu apt-get -y install aptitude
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
 print_status 'Installing packages required for setup...'
 # =======================================================================================
-app update
-app full-upgrade
-app install \
+stfu aptitude -yq3 update
+stfu aptitude -yq3 full-upgrade
+stfu aptitude -yq3 install \
 	apt-transport-https \
 	ca-certificates \
 	curl \
@@ -79,9 +77,9 @@ app install \
 	wget
 
 # Add bitcoin repo
-add-apt-repository -y ppa:bitcoin/bitcoin
-apt update
-app install \
+stfu add-apt-repository -y ppa:bitcoin/bitcoin
+stfu apt update
+stfu aptitude -yq3 install \
 	libdb4.8-dev \
 	libdb4.8++-dev
 # ---------------------------------------------------------------------------------------
@@ -105,7 +103,7 @@ oplwallet=$HOME/.oplcore
 # 'Installing the opl Masternode...'
 # =======================================================================================
 # What you need.
-whiptail --msgbox "You will need:
+TERM=ansi whiptail --msgbox "You will need:
 
 -A qt wallet with at least 3001 coins
 -A Linux server with a static public ip.  This setup is tested on Ubuntu 16.04 64-bit." \
@@ -114,13 +112,13 @@ whiptail --msgbox "You will need:
 	24 78
 
 # Step 1
-whiptail --msgbox "Start the qt wallet. Go to Settings→Options→Wallet and check “Enable coin control features” and “Show Masternodes Tab” then restart the wallet." \
+TERM=ansi whiptail --msgbox "Start the qt wallet. Go to Settings→Options→Wallet and check “Enable coin control features” and “Show Masternodes Tab” then restart the wallet." \
 	--backtitle "Installing OPL Masternode" \
 	--title "Step 1" \
 	24 78
 	
 # Step 2
-masternodealias=$(whiptail --inputbox "Create a new receiving address. Open menu File→ Receiving addressess… Click “+” button and enter a name for the address, for example MN1 and enter it here" \
+masternodealias=$(TERM=ansi whiptail --inputbox "Create a new receiving address. Open menu File→ Receiving addressess… Click “+” button and enter a name for the address, for example MN1 and enter it here" \
 	--default-item MN1 \
 	--backtitle "Installing OPL Masternode" \
 	--title "Step 2" \
@@ -130,7 +128,7 @@ masternodealias=$(whiptail --inputbox "Create a new receiving address. Open menu
 # note:  --default-item is not working here.  need fix.
 
 # Step 3
-whiptail --msgbox "Send exactly 3001 coins to this mn1 address When you send the coins make sure you send the correct address you created above, Verify that \"Subtract fee from amount\" is NOT checked. Wait for 15 confirmations of this transaction.
+TERM=ansi whiptail --msgbox "Send exactly 3001 coins to this mn1 address When you send the coins make sure you send the correct address you created above, Verify that \"Subtract fee from amount\" is NOT checked. Wait for 15 confirmations of this transaction.
 
 Note:  To check the confirmations of the transaction go to Transactions →right Click \"Show Transaction Details\" or Hover over the time clock in the far right of the transaction." \
 	--backtitle "Installing OPL Masternode" \
@@ -139,13 +137,13 @@ Note:  To check the confirmations of the transaction go to Transactions →right
 # Or is it 3000 coins?  Need clarification on the extra coin requirement.
 
 # Step 4
-whiptail --msgbox "Open the debug window via menu Tools→Debug Console." \
+TERM=ansi whiptail --msgbox "Open the debug window via menu Tools→Debug Console." \
 	--backtitle "Installing OPL Masternode" \
 	--title "Step 4" \
 	24 78
 	
 # Step 5
-masternodeprivkey=$(whiptail --inputbox "Execute the command \"masternode genkey\". This will output your MN priv key, for example: \"92PPhvRjKd5vIiBcwbVpq3g4CnKVGUEEGrorZJPYYoohgCu9QkF\". Paste it here then press OK" \
+masternodeprivkey=$(TERM=ansi whiptail --inputbox "Execute the command \"masternode genkey\". This will output your MN priv key, for example: \"92PPhvRjKd5vIiBcwbVpq3g4CnKVGUEEGrorZJPYYoohgCu9QkF\". Paste it here then press OK" \
 	--backtitle "Installing OPL Masternode" \
 	--title "Step 5" \
 	--nocancel \
@@ -153,7 +151,7 @@ masternodeprivkey=$(whiptail --inputbox "Execute the command \"masternode genkey
 	24 78)
 
 # Step 6a
-collateral_output_txid=$(whiptail --inputbox "Execute the command \"masternode outputs\". This will output TX and output pairs of numbers, for example:
+collateral_output_txid=$(TERM=ansi whiptail --inputbox "Execute the command \"masternode outputs\". This will output TX and output pairs of numbers, for example:
 \"{
  \"a9b31238d062ccb5f4b1eb6c3041d369cc014f5e6df38d2d303d791acd4302f2\": \"0\"
 }\"
@@ -165,7 +163,7 @@ Paste just the first number, long number, here and the second number in the next
 	24 78)
 
 # Step 6b
-collateral_output_index=$(whiptail --inputbox "Paste the second, single digit number from the previous step (usually \"0\" here." \
+collateral_output_index=$(TERM=ansi whiptail --inputbox "Paste the second, single digit number from the previous step (usually \"0\" here." \
 	--backtitle "Installing OPL Masternode" \
 	--title "Step 6b" \
 	--nocancel \
@@ -173,14 +171,14 @@ collateral_output_index=$(whiptail --inputbox "Paste the second, single digit nu
 	24 78)
 
 # Step 7
-whiptail --msgbox "Open the masternode.conf file via menu Tools→Open Masternode Configuration File. Without any blank lines type in a space-delimited single line paste the following string:
+TERM=ansi whiptail --msgbox "Open the masternode.conf file via menu Tools→Open Masternode Configuration File. Without any blank lines type in a space-delimited single line paste the following string:
 $masternodealias $publicip:5567 $masternodeprivkey $collateral_output_txid $collateral_output_index" \
 	--backtitle "Installing OPL Masternode" \
 	--title "Step 7" \
 	24 78
 	
 # Step 8
-whiptail --msgbox "Restart the wallet and go to the “Masternodes” tab. There in the tab “My Masternodes” you should see the entry of your masternode with the status \"MISSING\"." \
+TERM=ansi whiptail --msgbox "Restart the wallet and go to the “Masternodes” tab. There in the tab “My Masternodes” you should see the entry of your masternode with the status \"MISSING\"." \
 	--backtitle "Installing OPL Masternode" \
 	--title "Step 8" \
 	24 78
@@ -192,10 +190,10 @@ whiptail --msgbox "Restart the wallet and go to the “Masternodes” tab. There
 oplOS=linux
 oplURL=$(curl -s https://api.github.com/repos/opl-coin/opl.coin/releases/latest | jq -r ".assets[] | select(.name | test(\"${oplOS}\")) | .browser_download_url")
 oplFilename=$(basename $oplURL)
-wget $oplURL
-unzip -j $oplFilename -d /usr/local/bin/
-chmod +x /usr/local/bin/opl*
-rm -rf $oplFilename
+stfu wget $oplURL
+stfu unzip -j $oplFilename -d /usr/local/bin/
+stfu chmod +x /usr/local/bin/opl*
+stfu rm -rf $oplFilename
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
@@ -232,8 +230,8 @@ echo $masternodealias $publicip:$rpcport $masternodeprivkey $collateral_output_t
 # =======================================================================================
 # 'Fix wallet permissions...'
 # =======================================================================================
-chown -R $opluser $oplwallet
-chmod 0600 $oplwallet/*
+stfu chown -R $opluser $oplwallet
+stfu chmod 0600 $oplwallet/*
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
@@ -275,9 +273,9 @@ WantedBy=multi-user.targetEOF
 # =======================================================================================
 # 'Enabling and starting opl service...'
 # =======================================================================================
-systemctl daemon-reload
-systemctl enable opld
-systemctl restart opld
+stfu systemctl daemon-reload
+stfu systemctl enable opld
+stfu systemctl restart opld
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
