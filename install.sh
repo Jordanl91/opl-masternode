@@ -92,7 +92,7 @@ stfu aptitude -yq3 install \
 # =======================================================================================
 rpcuser="opluser"
 rpcpassword="$(head -c 32 /dev/urandom | base64)"
-rpcport="12548"
+rpcport="5567"
 opluserpw="$(head -c 32 /dev/urandom | base64)"
 publicip="$(dig +short myip.opendns.com @resolver1.opendns.com)"
 internalip="$(hostname -I)"
