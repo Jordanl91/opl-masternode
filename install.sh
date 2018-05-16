@@ -112,82 +112,92 @@ TERM=ansi whiptail --infobox "Installing the opl Masternode..." \
 TERM=ansi whiptail --msgbox "You will need:
 
 -A qt wallet with at least 3001 coins
--A Linux server with a static public ip.  This setup is tested on Ubuntu 16.04 64-bit." \
+-A Linux server with a static public ip.
+
+This setup is tested on Ubuntu 16.04 64-bit." \
 	--backtitle "Installing OPL Masternode" \
 	--title "Before you start" \
-	8 78
+	24 78
 
 # Step 1
-TERM=ansi whiptail --msgbox "Start the qt wallet. Go to Settings→Options→Wallet and check “Enable coin control features” and “Show Masternodes Tab” then restart the wallet." \
+TERM=ansi whiptail --msgbox "Start the qt wallet. Go to Settings→Options→Wallet and check “Show Masternodes Tab” then restart the wallet." \
 	--backtitle "Installing OPL Masternode" \
 	--title "Step 1" \
-	8 78
+	24 78
 	
 # Step 2
-masternodealias=$(TERM=ansi whiptail --inputbox "Create a new receiving address. Open menu File→ Receiving addressess… Click “+” button and enter a name for the address, for example MN1 and enter it here" \
+masternodealias=$(TERM=ansi whiptail --inputbox "Create a new receiving address. Open menu File→Receiving addressess… Click the add button and enter a name for the address, for example MN1, then enter it here" \
 	--default-item MN1 \
 	--backtitle "Installing OPL Masternode" \
 	--title "Step 2" \
 	--nocancel \
 	3>&1 1>&2 2>&3 \
-	8 78)
+	24 78)
 # note:  --default-item is not working here.  need fix.
 
 # Step 3
-TERM=ansi whiptail --msgbox "Send exactly 3001 coins to this mn1 address When you send the coins make sure you send the correct address you created above, Verify that \"Subtract fee from amount\" is NOT checked. Wait for 15 confirmations of this transaction.
+TERM=ansi whiptail --msgbox "Send exactly 3001 coins to this MN1 address.  Verify that \"Subtract fee from amount\" is NOT checked. Wait for 15 confirmations of this transaction.
 
-Note:  To check the confirmations of the transaction go to Transactions →right Click \"Show Transaction Details\" or Hover over the time clock in the far right of the transaction." \
+Note:  To check the confirmations of the transaction go to Transactions→right Click \"Show Transaction Details\" or Hover over the time clock in the far right of the transaction." \
 	--backtitle "Installing OPL Masternode" \
 	--title "Step 3" \
-	8 78
+	24 78
 # Or is it 3000 coins?  Need clarification on the extra coin requirement.
 
 # Step 4
 TERM=ansi whiptail --msgbox "Open the debug window via menu Tools→Debug Console." \
 	--backtitle "Installing OPL Masternode" \
 	--title "Step 4" \
-	8 78
+	24 78
 	
 # Step 5
-masternodeprivkey=$(TERM=ansi whiptail --inputbox "Execute the command \"masternode genkey\". This will output your MN priv key, for example: \"92PPhvRjKd5vIiBcwbVpq3g4CnKVGUEEGrorZJPYYoohgCu9QkF\". Paste it here then press OK" \
+masternodeprivkey=$(TERM=ansi whiptail --inputbox "Open the debug window via menu Tools→Debug Console and execute the command:
+
+\"masternode genkey\"
+
+This will output your MN priv key, for example:
+
+\"92PPhvRjKd5vIiBcwbVpq3g4CnKVGUEEGrorZJPYYoohgCu9QkF\".
+
+Paste it here then press OK" \
 	--backtitle "Installing OPL Masternode" \
-	--title "Step 5" \
+	--title "Step 4" \
 	--nocancel \
 	3>&1 1>&2 2>&3 \
-	8 78)
+	24 78)
 
-# Step 6a
+# Step 5
 collateral_output_txid=$(TERM=ansi whiptail --inputbox "Execute the command \"masternode outputs\". This will output TX and output pairs of numbers, for example:
 \"{
  \"a9b31238d062ccb5f4b1eb6c3041d369cc014f5e6df38d2d303d791acd4302f2\": \"0\"
 }\"
 Paste just the first number, long number, here and the second number in the next screen." \
 	--backtitle "Installing OPL Masternode" \
-	--title "Step 6a" \
+	--title "Step 5" \
 	--nocancel \
 	3>&1 1>&2 2>&3 \
-	8 78)
+	24 78)
 
 # Step 6b
 collateral_output_index=$(TERM=ansi whiptail --inputbox "Paste the second, single digit number from the previous step (usually \"0\" here." \
 	--backtitle "Installing OPL Masternode" \
-	--title "Step 6b" \
+	--title "Step 6" \
 	--nocancel \
 	3>&1 1>&2 2>&3 \
-	8 78)
+	24 78)
 
 # Step 7
 TERM=ansi whiptail --msgbox "Open the masternode.conf file via menu Tools→Open Masternode Configuration File. Without any blank lines type in a space-delimited single line paste the following string:
 $masternodealias $publicip:5567 $masternodeprivkey $collateral_output_txid $collateral_output_index" \
 	--backtitle "Installing OPL Masternode" \
 	--title "Step 7" \
-	8 78
+	24 78
 	
 # Step 8
 TERM=ansi whiptail --msgbox "Restart the wallet and go to the “Masternodes” tab. There in the tab “My Masternodes” you should see the entry of your masternode with the status \"MISSING\"." \
 	--backtitle "Installing OPL Masternode" \
 	--title "Step 8" \
-	8 78
+	24 78
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
