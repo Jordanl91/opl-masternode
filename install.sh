@@ -100,6 +100,7 @@ Hostname="$(cat /etc/hostname)"
 sshPort=$(cat /etc/ssh/sshd_config | grep Port | awk '{print $2}')
 opluser=$(who -m | awk '{print $1;}')
 oplwallet=$HOME/.oplcore
+sshPort=$(cat /etc/ssh/sshd_config | grep Port | awk '{print $2}')
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
@@ -302,6 +303,7 @@ EOF
 # Firewall port
 # =======================================================================================
 ufw allow 5567/tcp comment 'opl daemon'
+ufw allow $sshPort/tcp comment 'ssh port'
 ufw --force enable
 # ---------------------------------------------------------------------------------------
 
