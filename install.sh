@@ -248,18 +248,35 @@ print_status 'Installing opl service...'
 # =======================================================================================
 cat <<EOF > /etc/systemd/system/opld.service
 [Unit]
-Description=OPL Daemon
+Description=OPL daemon
 After=network.target
 
 [Service]
-EnvironmentFile=$oplwallet
-Restart=always
-RestartSec=5
-ExecStart=/usr/local/bin/opld --conf=$oplwallet/opl.conf
+ExecStart=/usr/local/bin/opld --daemon --conf=$oplwallet/opl.conf -pid=/run/opl/opld.pid
+RuntimeDirectory=opld
+User=$opluser
+Type=forking
+WorkingDirectory=$oplwallet
+PIDFile=/run/opl/opld.pid
+Restart=on-failure
+
+# Hardening measures
+####################
+# Provide a private /tmp and /var/tmp.
+PrivateTmp=true
+# Mount /usr, /boot/ and /etc read-only for the process.
+ProtectSystem=full
+# Disallow the process and all of its children to gain
+# new privileges through execve().
+NoNewPrivileges=true
+# Use a new /dev namespace only populated with API pseudo devices
+# such as /dev/null, /dev/zero and /dev/random.
+PrivateDevices=true
+# Deny the creation of writable and executable memory mappings.
+MemoryDenyWriteExecute=true
 
 [Install]
-WantedBy=default.target
-EOF
+WantedBy=multi-user.targetEOF
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
