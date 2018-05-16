@@ -7,7 +7,7 @@ export NEWT_COLORS=''
 alias whiptail='TERM=ansi whiptail'
 
 # Silence
-# Use 'stfu command args...'
+# Use 'command args...'
 stfu() {
   "$@" >/dev/null 2>&1
 }
@@ -45,17 +45,17 @@ fi
 # =======================================================================================
 # 'Switch to Aptitude...'
 # =======================================================================================
-stfu apt update
-stfu apt-get -y install aptitude
+apt update
+apt-get -y install aptitude
 alias app='aptitude -yq3'
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
 print_status 'Installing packages required for setup...'
 # =======================================================================================
-stfu app update
-stfu app full-upgrade
-stfu app install \
+app update
+app full-upgrade
+app install \
 	apt-transport-https \
 	ca-certificates \
 	curl \
@@ -79,9 +79,9 @@ stfu app install \
 	wget
 
 # Add bitcoin repo
-stfu add-apt-repository -y ppa:bitcoin/bitcoin
-stfu apt update
-stfu app install \
+add-apt-repository -y ppa:bitcoin/bitcoin
+apt update
+app install \
 	libdb4.8-dev \
 	libdb4.8++-dev
 # ---------------------------------------------------------------------------------------
@@ -192,10 +192,10 @@ whiptail --msgbox "Restart the wallet and go to the “Masternodes” tab. There
 oplOS=linux
 oplURL=$(curl -s https://api.github.com/repos/opl-coin/opl.coin/releases/latest | jq -r ".assets[] | select(.name | test(\"${oplOS}\")) | .browser_download_url")
 oplFilename=$(basename $oplURL)
-stfu wget $oplURL
-stfu unzip -j $oplFilename -d /usr/local/bin/
-stfu chmod +x /usr/local/bin/opl*
-stfu rm -rf $oplFilename
+wget $oplURL
+unzip -j $oplFilename -d /usr/local/bin/
+chmod +x /usr/local/bin/opl*
+rm -rf $oplFilename
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
@@ -275,9 +275,9 @@ WantedBy=multi-user.targetEOF
 # =======================================================================================
 # 'Enabling and starting opl service...'
 # =======================================================================================
-stfu systemctl daemon-reload
-stfu systemctl enable opld
-stfu systemctl restart opld
+systemctl daemon-reload
+systemctl enable opld
+systemctl restart opld
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
