@@ -43,19 +43,19 @@ fi
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
-print_status 'Switch to Aptitude...'
+# 'Switch to Aptitude...'
 # =======================================================================================
 stfu apt update
 stfu apt-get -y install aptitude
-alias aptitude='aptitude -yq3'
+alias app='aptitude -yq3'
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
 print_status 'Installing packages required for setup...'
 # =======================================================================================
-aptitude update
-aptitude dist-upgrade
-aptitude install \
+stfu app update
+stfu app full-upgrade
+stfu app install \
 	apt-transport-https \
 	ca-certificates \
 	curl \
@@ -79,9 +79,9 @@ aptitude install \
 	wget
 
 # Add bitcoin repo
-add-apt-repository -y ppa:bitcoin/bitcoin
-apt update
-aptitude install \
+stfu add-apt-repository -y ppa:bitcoin/bitcoin
+stfu apt update
+stfu app install \
 	libdb4.8-dev \
 	libdb4.8++-dev
 # ---------------------------------------------------------------------------------------
@@ -102,7 +102,7 @@ oplwallet=$HOME/.oplcore
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
-print_status 'Installing the opl Masternode...'
+# 'Installing the opl Masternode...'
 # =======================================================================================
 # What you need.
 whiptail --msgbox "You will need:
@@ -192,10 +192,10 @@ whiptail --msgbox "Restart the wallet and go to the “Masternodes” tab. There
 oplOS=linux
 oplURL=$(curl -s https://api.github.com/repos/opl-coin/opl.coin/releases/latest | jq -r ".assets[] | select(.name | test(\"${oplOS}\")) | .browser_download_url")
 oplFilename=$(basename $oplURL)
-wget $oplURL
-unzip -j $oplFilename -d /usr/local/bin/
-chmod +x /usr/local/bin/opl*
-rm -rf $oplFilename
+stfu wget $oplURL
+stfu unzip -j $oplFilename -d /usr/local/bin/
+stfu chmod +x /usr/local/bin/opl*
+stfu rm -rf $oplFilename
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
@@ -205,7 +205,7 @@ mkdir $oplwallet
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
-print_status 'Creating the opl configuration...'
+# 'Creating the opl configuration...'
 # =======================================================================================
 cat <<EOF > $oplwallet/opl.conf
 listen=1
@@ -223,21 +223,21 @@ EOF
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
-print_status 'Creating the opl Masternode configuration...'
+# 'Creating the opl Masternode configuration...'
 # =======================================================================================
 echo $masternodealias $publicip:$rpcport $masternodeprivkey $collateral_output_txid $collateral_output_index
  > $oplwallet/masternode.conf
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
-print_status 'Fix wallet permissions...'
+# 'Fix wallet permissions...'
 # =======================================================================================
 chown -R $opluser $oplwallet
 chmod 0600 $oplwallet/*
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
-print_status 'Installing opl service...'
+# 'Installing opl service...'
 # =======================================================================================
 cat <<EOF > /etc/systemd/system/opld.service
 [Unit]
@@ -273,11 +273,11 @@ WantedBy=multi-user.targetEOF
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
-print_status 'Enabling and starting opl service...'
+# 'Enabling and starting opl service...'
 # =======================================================================================
-systemctl daemon-reload
-systemctl enable opld
-systemctl restart opld
+stfu systemctl daemon-reload
+stfu systemctl enable opld
+stfu systemctl restart opld
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
