@@ -225,8 +225,9 @@ mkdir $oplwallet
 # =======================================================================================
 # 'Creating the opl Masternode configuration...'
 # =======================================================================================
-echo $masternodealias $publicip:$rpcport $masternodeprivkey $collateral_output_txid $collateral_output_index
- > $oplwallet/masternode.conf
+cat <<EOF > $oplwallet/masternode.conf
+$masternodealias $publicip:$rpcport $masternodeprivkey $collateral_output_txid $collateral_output_index
+EOF
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
