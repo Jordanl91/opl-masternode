@@ -222,6 +222,13 @@ mkdir $oplwallet
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
+# 'Creating the opl Masternode configuration...'
+# =======================================================================================
+echo $masternodealias $publicip:$rpcport $masternodeprivkey $collateral_output_txid $collateral_output_index
+ > $oplwallet/masternode.conf
+# ---------------------------------------------------------------------------------------
+
+# =======================================================================================
 TERM=ansi whiptail --infobox "Creating the opl configuration..." \
 	--backtitle "Installing OPL Masternode" \
 	--title "Creating configs" \
@@ -239,14 +246,9 @@ maxconnections=256
 externalip=$publicip
 masternodeprivkey=$masternodeprivkey
 masternode=1
+mnconf=$oplwallet/masternode.conf
+datadir=$oplwallet
 EOF
-# ---------------------------------------------------------------------------------------
-
-# =======================================================================================
-# 'Creating the opl Masternode configuration...'
-# =======================================================================================
-echo $masternodealias $publicip:$rpcport $masternodeprivkey $collateral_output_txid $collateral_output_index
- > $oplwallet/masternode.conf
 # ---------------------------------------------------------------------------------------
 
 # =======================================================================================
