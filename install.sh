@@ -275,12 +275,12 @@ Description=OPL daemon
 After=network.target
 
 [Service]
-ExecStart=/usr/local/bin/opld --daemon --conf=$oplwallet/opl.conf -pid=/run/opl/opld.pid
+ExecStart=/usr/local/bin/opld --daemon --conf=$oplwallet/opl.conf -pid=/run/opld/opld.pid
 RuntimeDirectory=opld
 User=$opluser
 Type=forking
 WorkingDirectory=$oplwallet
-PIDFile=/run/opl/opld.pid
+PIDFile=/run/opld/opld.pid
 Restart=on-failure
 
 # Hardening measures
